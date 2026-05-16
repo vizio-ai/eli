@@ -6,7 +6,7 @@ app = FastAPI(title="Eli API", description="Eli - Vizio AI Virtual Employee")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://eli.vercel.app"],
+    allow_origins=["http://localhost:3000", "https://eli-vizio.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
