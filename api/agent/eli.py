@@ -2,7 +2,7 @@ import os
 import anthropic
 from typing import Generator
 
-client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+_client: anthropic.Anthropic | None = None
 
 SYSTEM_PROMPT = """You are Eli, a virtual employee at Vizio AI. You are helpful, professional, and proactive.
 
@@ -15,10 +15,16 @@ You can:
 
 Always be concise, friendly, and action-oriented. When you take an action (like sending a Slack message or saving data), confirm what you did."""
 
+def get_client() -> anthropic.Anthropic:
+    global _client
+    if _client is None:
+        _client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    return _client
+
 def chat(messages: list[dict], stream: bool = False):
     if stream:
         return _stream(messages)
-    response = client.messages.create(
+    response = get_client().messages.create(
         model="claude-sonnet-4-6",
         max_tokens=8096,
         system=SYSTEM_PROMPT,
@@ -27,7 +33,7 @@ def chat(messages: list[dict], stream: bool = False):
     return response.content[0].text
 
 def _stream(messages: list[dict]) -> Generator[str, None, None]:
-    with client.messages.stream(
+    with get_client().messages.stream(
         model="claude-sonnet-4-6",
         max_tokens=8096,
         system=SYSTEM_PROMPT,
