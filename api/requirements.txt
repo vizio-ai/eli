@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+anthropic
+supabase
+slack-bolt
+pandas
+python-dotenv
+httpx
